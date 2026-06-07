@@ -1,3 +1,12 @@
+const supabaseConfigured =
+  window.KAB_SUPABASE_URL &&
+  window.KAB_SUPABASE_ANON_KEY &&
+  !window.KAB_SUPABASE_ANON_KEY.includes("PASTE_");
+
+const kabDb = supabaseConfigured
+  ? window.supabase.createClient(window.KAB_SUPABASE_URL, window.KAB_SUPABASE_ANON_KEY)
+  : null;
+
 const menuToggle = document.querySelector(".menu-toggle");
 const nav = document.querySelector(".nav");
 
@@ -32,31 +41,63 @@ filterButtons.forEach((button) => {
 });
 
 function escapeHtml(value) {
-  return String(value).replace(/[&<>"']/g, (char) => {
+  return String(value ?? "").replace(/[&<>"']/g, (char) => {
     const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" };
     return map[char];
   });
 }
 
-function renderPublishedNews() {
+function formatDate(value) {
+  return new Date(value).toLocaleDateString("id-ID", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function renderEmptyNews(title, description) {
+  publishedNews.innerHTML = `
+    <article class="public-empty">
+      <span class="badge">Info</span>
+      <h3>${escapeHtml(title)}</h3>
+      <p>${escapeHtml(description)}</p>
+    </article>
+  `;
+}
+
+async function renderPublishedNews() {
   if (!publishedNews) return;
 
-  const items = JSON.parse(localStorage.getItem("kab-news") || "[]")
-    .filter((item) => item.published)
-    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-
-  if (!items.length) {
-    publishedNews.innerHTML = `
-      <article class="public-empty">
-        <span class="badge">Info</span>
-        <h3>Belum ada berita admin yang diterbitkan.</h3>
-        <p>Masuk ke halaman admin, tulis berita, lalu aktifkan pilihan terbitkan di website.</p>
-      </article>
-    `;
+  if (!kabDb) {
+    renderEmptyNews(
+      "Supabase belum dikonfigurasi.",
+      "Isi KAB_SUPABASE_ANON_KEY di supabase-config.js, lalu jalankan supabase-schema.sql di SQL Editor Supabase."
+    );
     return;
   }
 
-  publishedNews.innerHTML = items
+  publishedNews.innerHTML = `<div class="empty-state">Memuat berita dari Supabase...</div>`;
+
+  const { data, error } = await kabDb
+    .from("news")
+    .select("id,title,category,author,excerpt,content,image,published,created_at,updated_at")
+    .eq("published", true)
+    .order("updated_at", { ascending: false });
+
+  if (error) {
+    renderEmptyNews("Gagal memuat berita.", error.message);
+    return;
+  }
+
+  if (!data.length) {
+    renderEmptyNews(
+      "Belum ada berita admin yang diterbitkan.",
+      "Masuk ke halaman admin, tulis berita, lalu aktifkan pilihan terbitkan di website."
+    );
+    return;
+  }
+
+  publishedNews.innerHTML = data
     .map(
       (item) => `
         <article class="published-card">
@@ -73,7 +114,7 @@ function renderPublishedNews() {
               <summary>Baca isi berita</summary>
               <p>${escapeHtml(item.content).replace(/\n/g, "<br />")}</p>
             </details>
-            <div class="meta">${escapeHtml(item.author)} | ${new Date(item.updatedAt).toLocaleDateString("id-ID")}</div>
+            <div class="meta">${escapeHtml(item.author)} | ${formatDate(item.updated_at)}</div>
           </div>
         </article>
       `

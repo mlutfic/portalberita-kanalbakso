@@ -1,7 +1,14 @@
-const STORAGE_KEY = "kab-news";
-const SESSION_KEY = "kab-admin-session";
-const ADMIN_USER = "admin";
-const ADMIN_PASS = "kab2026";
+const SESSION_KEY = "kab-admin-token";
+const ADMIN_NAME_KEY = "kab-admin-name";
+
+const supabaseConfigured =
+  window.KAB_SUPABASE_URL &&
+  window.KAB_SUPABASE_ANON_KEY &&
+  !window.KAB_SUPABASE_ANON_KEY.includes("PASTE_");
+
+const kabDb = supabaseConfigured
+  ? window.supabase.createClient(window.KAB_SUPABASE_URL, window.KAB_SUPABASE_ANON_KEY)
+  : null;
 
 const loginPanel = document.getElementById("loginPanel");
 const dashboardPanel = document.getElementById("dashboardPanel");
@@ -27,11 +34,14 @@ const fields = {
   published: document.getElementById("newsPublished"),
 };
 
-const getNews = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-const setNews = (items) => localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+let adminNews = [];
+
+function getToken() {
+  return sessionStorage.getItem(SESSION_KEY);
+}
 
 function escapeHtml(value) {
-  return String(value).replace(/[&<>"']/g, (char) => {
+  return String(value ?? "").replace(/[&<>"']/g, (char) => {
     const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" };
     return map[char];
   });
@@ -72,7 +82,7 @@ function getImageFromFile(file) {
 }
 
 function renderAdminList() {
-  const items = getNews().sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+  const items = [...adminNews].sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
   newsCount.textContent = `${items.length} berita`;
 
   if (!items.length) {
@@ -90,7 +100,7 @@ function renderAdminList() {
             </span>
             <h3>${escapeHtml(item.title)}</h3>
             <p>${escapeHtml(item.excerpt)}</p>
-            <small>${escapeHtml(item.category)} | ${escapeHtml(item.author)} | ${new Date(item.updatedAt).toLocaleString("id-ID")}</small>
+            <small>${escapeHtml(item.category)} | ${escapeHtml(item.author)} | ${new Date(item.updated_at).toLocaleString("id-ID")}</small>
           </div>
           <div class="item-actions">
             <button type="button" data-action="edit" data-id="${item.id}">Edit</button>
@@ -105,25 +115,66 @@ function renderAdminList() {
     .join("");
 }
 
-loginForm.addEventListener("submit", (event) => {
+function requireSupabase() {
+  if (kabDb) return true;
+
+  loginMessage.textContent =
+    "Supabase belum dikonfigurasi. Isi anon key di supabase-config.js dan jalankan supabase-schema.sql.";
+  return false;
+}
+
+async function loadAdminNews() {
+  newsList.innerHTML = `<div class="empty-state">Memuat berita dari Supabase...</div>`;
+
+  const { data, error } = await kabDb.rpc("get_admin_news", {
+    session_token: getToken(),
+  });
+
+  if (error) {
+    sessionStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem(ADMIN_NAME_KEY);
+    showLogin();
+    loginMessage.textContent = error.message;
+    return;
+  }
+
+  adminNews = data || [];
+  showDashboard();
+}
+
+loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+  loginMessage.textContent = "";
+
+  if (!requireSupabase()) return;
+
   const formData = new FormData(loginForm);
   const username = formData.get("username");
   const password = formData.get("password");
 
-  if (username === ADMIN_USER && password === ADMIN_PASS) {
-    sessionStorage.setItem(SESSION_KEY, "true");
-    loginForm.reset();
-    loginMessage.textContent = "";
-    showDashboard();
+  const { data, error } = await kabDb.rpc("login_admin", {
+    input_username: username,
+    input_password: password,
+  });
+
+  if (error || !data?.length) {
+    loginMessage.textContent = error?.message || "Username atau password salah.";
     return;
   }
 
-  loginMessage.textContent = "Username atau password salah.";
+  sessionStorage.setItem(SESSION_KEY, data[0].token);
+  sessionStorage.setItem(ADMIN_NAME_KEY, data[0].display_name);
+  loginForm.reset();
+  await loadAdminNews();
 });
 
-logoutButton.addEventListener("click", () => {
+logoutButton.addEventListener("click", async () => {
+  if (kabDb && getToken()) {
+    await kabDb.rpc("logout_admin", { session_token: getToken() });
+  }
+
   sessionStorage.removeItem(SESSION_KEY);
+  sessionStorage.removeItem(ADMIN_NAME_KEY);
   showLogin();
 });
 
@@ -131,43 +182,42 @@ resetFormButton.addEventListener("click", resetForm);
 
 newsForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  const items = getNews();
-  const existingId = fields.id.value;
-  const existing = items.find((item) => item.id === existingId);
+  saveMessage.textContent = "";
+
+  const existingId = fields.id.value || null;
+  const existing = adminNews.find((item) => item.id === existingId);
   const uploadedImage = await getImageFromFile(fields.imageFile.files[0]);
-  const now = new Date().toISOString();
+  const imageValue = uploadedImage || fields.imageUrl.value.trim() || existing?.image || "";
 
-  const nextItem = {
-    id: existingId || crypto.randomUUID(),
-    title: fields.title.value.trim(),
-    category: fields.category.value,
-    author: fields.author.value.trim(),
-    excerpt: fields.excerpt.value.trim(),
-    content: fields.content.value.trim(),
-    image: uploadedImage || fields.imageUrl.value.trim() || existing?.image || "",
-    published: fields.published.checked,
-    createdAt: existing?.createdAt || now,
-    updatedAt: now,
-  };
+  const { error } = await kabDb.rpc("save_admin_news", {
+    session_token: getToken(),
+    input_id: existingId,
+    input_title: fields.title.value.trim(),
+    input_category: fields.category.value,
+    input_author: fields.author.value.trim(),
+    input_excerpt: fields.excerpt.value.trim(),
+    input_content: fields.content.value.trim(),
+    input_image: imageValue,
+    input_published: fields.published.checked,
+  });
 
-  const nextItems = existingId
-    ? items.map((item) => (item.id === existingId ? nextItem : item))
-    : [nextItem, ...items];
+  if (error) {
+    saveMessage.textContent = error.message;
+    return;
+  }
 
-  setNews(nextItems);
-  saveMessage.textContent = "Berita berhasil disimpan.";
-  renderAdminList();
+  saveMessage.textContent = "Berita berhasil disimpan ke Supabase.";
   resetForm();
+  await loadAdminNews();
 });
 
-newsList.addEventListener("click", (event) => {
+newsList.addEventListener("click", async (event) => {
   const button = event.target.closest("button[data-action]");
   if (!button) return;
 
   const action = button.dataset.action;
   const id = button.dataset.id;
-  const items = getNews();
-  const item = items.find((news) => news.id === id);
+  const item = adminNews.find((news) => news.id === id);
 
   if (!item) return;
 
@@ -187,19 +237,41 @@ newsList.addEventListener("click", (event) => {
   }
 
   if (action === "toggle") {
-    setNews(items.map((news) => (news.id === id ? { ...news, published: !news.published, updatedAt: new Date().toISOString() } : news)));
-    renderAdminList();
+    const { error } = await kabDb.rpc("toggle_admin_news", {
+      session_token: getToken(),
+      input_id: id,
+    });
+
+    if (error) {
+      saveMessage.textContent = error.message;
+      return;
+    }
+
+    await loadAdminNews();
     return;
   }
 
   if (action === "delete" && confirm("Hapus berita ini?")) {
-    setNews(items.filter((news) => news.id !== id));
-    renderAdminList();
+    const { error } = await kabDb.rpc("delete_admin_news", {
+      session_token: getToken(),
+      input_id: id,
+    });
+
+    if (error) {
+      saveMessage.textContent = error.message;
+      return;
+    }
+
+    await loadAdminNews();
   }
 });
 
-if (sessionStorage.getItem(SESSION_KEY) === "true") {
-  showDashboard();
+if (getToken() && kabDb) {
+  loadAdminNews();
 } else {
   showLogin();
+  if (!supabaseConfigured) {
+    loginMessage.textContent =
+      "Isi KAB_SUPABASE_ANON_KEY di supabase-config.js, lalu jalankan supabase-schema.sql di Supabase SQL Editor.";
+  }
 }

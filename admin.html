@@ -12,6 +12,8 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
   </head>
   <body class="admin-page">
     <main class="admin-shell">
@@ -21,7 +23,7 @@
           <p class="eyebrow">Admin</p>
           <h1>Masuk Redaksi</h1>
           <p class="login-note">
-            Login ini untuk demo lokal. Untuk website online, ganti dengan sistem backend dan database.
+            Login admin diverifikasi lewat tabel dan fungsi database Supabase.
           </p>
           <form id="loginForm">
             <label>
@@ -36,7 +38,7 @@
             <p class="form-message" id="loginMessage" role="alert"></p>
           </form>
           <div class="demo-access">
-            <strong>Akses demo</strong>
+            <strong>Akses awal</strong>
             <span>Username: admin</span>
             <span>Password: kab2026</span>
           </div>
