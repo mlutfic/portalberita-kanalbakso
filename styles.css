@@ -626,6 +626,14 @@ img {
   font-weight: 800;
 }
 
+.footer address a {
+  display: block;
+  width: fit-content;
+  margin-top: 8px;
+  color: var(--red);
+  font-weight: 800;
+}
+
 .footer a {
   align-self: center;
   color: var(--red);
