@@ -41,7 +41,7 @@ to anon, authenticated
 using (published = true);
 
 insert into public.admin_users (username, password_hash, display_name)
-values ('admin', crypt('kab2026', gen_salt('bf')), 'Redaksi Kanal')
+values ('admin', extensions.crypt('kab2026', extensions.gen_salt('bf')), 'Redaksi Kanal')
 on conflict (username) do update
 set password_hash = excluded.password_hash,
     display_name = excluded.display_name,
@@ -78,13 +78,14 @@ begin
   from public.admin_users
   where username = input_username
     and active = true
-    and password_hash = crypt(input_password, password_hash);
+    and password_hash = extensions.crypt(input_password, password_hash);
 
   if matched_user.id is null then
     raise exception 'Username atau password salah';
   end if;
 
-  delete from public.admin_sessions where expires_at < now();
+  delete from public.admin_sessions
+  where admin_sessions.expires_at < now();
 
   insert into public.admin_sessions (admin_user_id)
   values (matched_user.id)
