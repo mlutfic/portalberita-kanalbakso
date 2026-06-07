@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Baca Berita | Kanal Akhmad Baso</title>
+    <meta name="description" content="Baca artikel Kanal Akhmad Baso." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,600;6..72,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="topline">
+        <span>Minggu, 7 Juni 2026</span>
+        <span>Portal informasi warga Palopo dan Tana Luwu</span>
+      </div>
+
+      <div class="brand-row">
+        <a class="brand" href="index.html" aria-label="Kanal Akhmad Baso">
+          <span class="brand-mark">
+            <img src="assets/logo-kanal-akhmad-baso.jpg" alt="" />
+          </span>
+          <span>
+            <strong>Kanal Akhmad Baso</strong>
+            <small>Berita lokal, budaya, dan suara warga</small>
+          </span>
+        </a>
+        <button class="menu-toggle" type="button" aria-label="Buka menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <nav class="nav" aria-label="Navigasi utama">
+        <a href="index.html">Beranda</a>
+        <a href="kategori.html">Terkini</a>
+        <a href="kategori.html?category=Publik">Publik</a>
+        <a href="kategori.html?category=Budaya">Budaya</a>
+        <a href="kategori.html?category=Komunitas">Komunitas</a>
+        <a href="index.html#kontak">Kontak Redaksi</a>
+        <a href="admin.html">Admin</a>
+      </nav>
+    </header>
+
+    <main class="article-page">
+      <article class="article-shell" id="articleShell" aria-live="polite"></article>
+      <aside class="article-related">
+        <div class="panel-heading">
+          <h2>Berita Lainnya</h2>
+        </div>
+        <div id="relatedNews"></div>
+      </aside>
+    </main>
+
+    <footer class="footer" id="kontak">
+      <div>
+        <strong>Kanal Akhmad Baso</strong>
+        <p>Template portal berita lokal. Konten demo dapat diganti dengan artikel asli.</p>
+      </div>
+      <a href="https://www.facebook.com/akhmad.baso.379965" target="_blank" rel="noreferrer">
+        Kunjungi sumber Facebook
+      </a>
+    </footer>
+
+    <script src="berita.js"></script>
+  </body>
+</html>

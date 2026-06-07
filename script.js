@@ -1,4 +1,5 @@
 const supabaseConfigured =
+  window.supabase &&
   window.KAB_SUPABASE_URL &&
   window.KAB_SUPABASE_ANON_KEY &&
   !window.KAB_SUPABASE_ANON_KEY.includes("PASTE_");
@@ -65,6 +66,10 @@ function renderEmptyNews(title, description) {
   `;
 }
 
+function articleUrl(id) {
+  return `berita.html?id=${encodeURIComponent(id)}`;
+}
+
 async function renderPublishedNews() {
   if (!publishedNews) return;
 
@@ -110,10 +115,7 @@ async function renderPublishedNews() {
             <span class="badge">${escapeHtml(item.category)}</span>
             <h3>${escapeHtml(item.title)}</h3>
             <p>${escapeHtml(item.excerpt)}</p>
-            <details>
-              <summary>Baca isi berita</summary>
-              <p>${escapeHtml(item.content).replace(/\n/g, "<br />")}</p>
-            </details>
+            <a class="read-more" href="${articleUrl(item.id)}">Baca isi berita</a>
             <div class="meta">${escapeHtml(item.author)} | ${formatDate(item.updated_at)}</div>
           </div>
         </article>

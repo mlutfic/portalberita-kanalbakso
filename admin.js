@@ -2,6 +2,7 @@ const SESSION_KEY = "kab-admin-token";
 const ADMIN_NAME_KEY = "kab-admin-name";
 
 const supabaseConfigured =
+  window.supabase &&
   window.KAB_SUPABASE_URL &&
   window.KAB_SUPABASE_ANON_KEY &&
   !window.KAB_SUPABASE_ANON_KEY.includes("PASTE_");
