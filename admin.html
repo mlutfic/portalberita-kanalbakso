@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Berita | Kanal Akhmad Baso</title>
+    <meta name="description" content="Halaman admin demo untuk mengisi dan memantau berita Kanal Akhmad Baso." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,600;6..72,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="admin-page">
+    <main class="admin-shell">
+      <section class="admin-login" id="loginPanel">
+        <a class="back-home" href="index.html">Kembali ke Website</a>
+        <div class="login-card">
+          <p class="eyebrow">Admin</p>
+          <h1>Masuk Redaksi</h1>
+          <p class="login-note">
+            Login ini untuk demo lokal. Untuk website online, ganti dengan sistem backend dan database.
+          </p>
+          <form id="loginForm">
+            <label>
+              Username
+              <input type="text" name="username" autocomplete="username" required />
+            </label>
+            <label>
+              Password
+              <input type="password" name="password" autocomplete="current-password" required />
+            </label>
+            <button class="primary-link admin-submit" type="submit">Masuk</button>
+            <p class="form-message" id="loginMessage" role="alert"></p>
+          </form>
+          <div class="demo-access">
+            <strong>Akses demo</strong>
+            <span>Username: admin</span>
+            <span>Password: kab2026</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-dashboard is-hidden" id="dashboardPanel">
+        <header class="admin-topbar">
+          <div>
+            <p class="eyebrow">Dashboard</p>
+            <h1>Kelola Berita</h1>
+          </div>
+          <div class="admin-actions">
+            <a class="secondary-admin" href="index.html">Lihat Website</a>
+            <button class="danger-admin" type="button" id="logoutButton">Keluar</button>
+          </div>
+        </header>
+
+        <div class="admin-grid">
+          <form class="editor-panel" id="newsForm">
+            <input type="hidden" id="newsId" />
+            <div class="panel-heading">
+              <h2 id="formTitle">Tulis Berita</h2>
+              <button class="secondary-admin" type="button" id="resetForm">Reset</button>
+            </div>
+
+            <label>
+              Judul
+              <input id="newsTitle" type="text" maxlength="120" required />
+            </label>
+
+            <div class="form-row">
+              <label>
+                Kategori
+                <select id="newsCategory" required>
+                  <option value="Publik">Publik</option>
+                  <option value="Budaya">Budaya</option>
+                  <option value="Komunitas">Komunitas</option>
+                  <option value="Opini">Opini</option>
+                </select>
+              </label>
+              <label>
+                Penulis
+                <input id="newsAuthor" type="text" value="Redaksi Kanal" required />
+              </label>
+            </div>
+
+            <label>
+              Ringkasan
+              <textarea id="newsExcerpt" rows="3" maxlength="220" required></textarea>
+            </label>
+
+            <label>
+              Isi Berita
+              <textarea id="newsContent" rows="8" required></textarea>
+            </label>
+
+            <label>
+              URL Gambar
+              <input id="newsImageUrl" type="url" placeholder="https://contoh.com/gambar.jpg" />
+            </label>
+
+            <label>
+              Upload Gambar Lokal
+              <input id="newsImageFile" type="file" accept="image/*" />
+            </label>
+
+            <label class="check-row">
+              <input id="newsPublished" type="checkbox" checked />
+              <span>Terbitkan di website</span>
+            </label>
+
+            <button class="primary-link admin-submit" type="submit">Simpan Berita</button>
+            <p class="form-message" id="saveMessage" role="status"></p>
+          </form>
+
+          <section class="monitor-panel">
+            <div class="panel-heading">
+              <h2>Pantau Berita</h2>
+              <span id="newsCount">0 berita</span>
+            </div>
+            <div class="admin-news-list" id="adminNewsList"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <script src="admin.js"></script>
+  </body>
+</html>

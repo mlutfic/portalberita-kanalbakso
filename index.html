@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kanal Akhmad Baso | Portal Berita Lokal</title>
+    <meta
+      name="description"
+      content="Portal berita lokal bergaya redaksi untuk Kanal Akhmad Baso, berisi kabar Palopo, Tana Luwu, budaya, publik, dan komunitas."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,600;6..72,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="topline">
+        <span>Minggu, 7 Juni 2026</span>
+        <span>Portal informasi warga Palopo dan Tana Luwu</span>
+      </div>
+
+      <div class="brand-row">
+        <a class="brand" href="#beranda" aria-label="Kanal Akhmad Baso">
+          <span class="brand-mark">KAB</span>
+          <span>
+            <strong>Kanal Akhmad Baso</strong>
+            <small>Berita lokal, budaya, dan suara warga</small>
+          </span>
+        </a>
+        <button class="menu-toggle" type="button" aria-label="Buka menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <nav class="nav" aria-label="Navigasi utama">
+        <a href="#beranda">Beranda</a>
+        <a href="#terkini">Terkini</a>
+        <a href="#publik">Publik</a>
+        <a href="#budaya">Budaya</a>
+        <a href="#komunitas">Komunitas</a>
+        <a href="#kontak">Kontak Redaksi</a>
+        <a href="admin.html">Admin</a>
+      </nav>
+    </header>
+
+    <main id="beranda">
+      <section class="hero">
+        <img src="assets/hero-kanal-akhmad-baso.png" alt="Meja redaksi berita lokal dengan perangkat liputan" />
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <p class="eyebrow">Kanal informasi lokal</p>
+          <h1>Kabar Palopo dan Tana Luwu dalam format portal berita.</h1>
+          <p>
+            Rancangan website ini menempatkan Kanal Akhmad Baso sebagai media warga yang rapi,
+            mudah dibaca, dan siap dikembangkan menjadi portal berita lengkap.
+          </p>
+          <div class="hero-actions">
+            <a class="primary-link" href="#terkini">Baca Berita</a>
+            <a class="secondary-link" href="#tentang">Tentang Kanal</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="ticker" aria-label="Sorotan berita">
+        <strong>Sorotan</strong>
+        <div>
+          <span>Isu publik Palopo</span>
+          <span>Budaya Tana Luwu</span>
+          <span>Aktivitas komunitas</span>
+          <span>Catatan warga</span>
+        </div>
+      </section>
+
+      <section class="layout-section" id="terkini">
+        <div class="section-heading">
+          <p class="eyebrow">Terkini</p>
+          <h2>Berita Pilihan Redaksi</h2>
+        </div>
+
+        <div class="news-layout">
+          <article class="lead-story" data-category="publik">
+            <div class="story-image story-image-public"></div>
+            <div class="story-body">
+              <span class="badge">Publik</span>
+              <h3>Ruang warga untuk memantau isu Palopo yang berdampak langsung ke masyarakat.</h3>
+              <p>
+                Portal ini disiapkan untuk menampung kabar lapangan, pembaruan kebijakan,
+                respons masyarakat, dan arsip isu lokal dengan tampilan redaksional.
+              </p>
+              <div class="meta">Redaksi Kanal | 7 Juni 2026</div>
+            </div>
+          </article>
+
+          <div class="story-list">
+            <article class="story-card" data-category="budaya">
+              <div class="card-accent accent-culture"></div>
+              <span class="badge">Budaya</span>
+              <h3>Catatan budaya Tana Luwu dibuat lebih mudah ditemukan dan dibaca ulang.</h3>
+              <p>Ruang khusus untuk tokoh, tradisi, arsip, dan cerita lokal.</p>
+              <div class="meta">3 menit baca</div>
+            </article>
+
+            <article class="story-card" data-category="komunitas">
+              <div class="card-accent accent-community"></div>
+              <span class="badge">Komunitas</span>
+              <h3>Kabar warga, agenda sosial, dan kegiatan komunitas dalam satu kanal.</h3>
+              <p>Format pendek yang cocok untuk update cepat dari lapangan.</p>
+              <div class="meta">2 menit baca</div>
+            </article>
+
+            <article class="story-card" data-category="opini">
+              <div class="card-accent accent-opinion"></div>
+              <span class="badge">Opini</span>
+              <h3>Kolom pandangan warga untuk membahas masalah kota secara tertib.</h3>
+              <p>Artikel opini tetap diberi label jelas agar berbeda dari berita.</p>
+              <div class="meta">5 menit baca</div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="layout-section compact" id="berita-admin">
+        <div class="section-heading row-heading">
+          <div>
+            <p class="eyebrow">Publikasi</p>
+            <h2>Berita Terbit dari Admin</h2>
+          </div>
+          <a class="admin-shortcut" href="admin.html">Masuk Admin</a>
+        </div>
+
+        <div class="published-news" id="publishedNews" aria-live="polite"></div>
+      </section>
+
+      <section class="layout-section compact" id="publik">
+        <div class="section-heading row-heading">
+          <div>
+            <p class="eyebrow">Kanal</p>
+            <h2>Topik Utama</h2>
+          </div>
+          <div class="filter-group" aria-label="Filter berita">
+            <button class="filter is-active" type="button" data-filter="all">Semua</button>
+            <button class="filter" type="button" data-filter="publik">Publik</button>
+            <button class="filter" type="button" data-filter="budaya">Budaya</button>
+            <button class="filter" type="button" data-filter="komunitas">Komunitas</button>
+          </div>
+        </div>
+
+        <div class="topic-grid">
+          <article class="topic-card" data-category="publik">
+            <span>01</span>
+            <h3>Isu Publik</h3>
+            <p>Peristiwa kota, pelayanan umum, aspirasi warga, dan isu yang perlu dikawal.</p>
+          </article>
+          <article class="topic-card" data-category="budaya" id="budaya">
+            <span>02</span>
+            <h3>Budaya Luwu</h3>
+            <p>Tokoh, sejarah, tradisi, bahasa, dan ingatan kolektif masyarakat Tana Luwu.</p>
+          </article>
+          <article class="topic-card" data-category="komunitas" id="komunitas">
+            <span>03</span>
+            <h3>Komunitas</h3>
+            <p>Agenda sosial, kegiatan anak muda, pendidikan, ekonomi lokal, dan gotong royong.</p>
+          </article>
+          <article class="topic-card" data-category="publik">
+            <span>04</span>
+            <h3>Data & Arsip</h3>
+            <p>Rangkuman isu penting agar pembaca bisa mengikuti perkembangan dari waktu ke waktu.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="about-section" id="tentang">
+        <div>
+          <p class="eyebrow">Tentang</p>
+          <h2>Dibuat dari identitas publik Kanal Akhmad Baso.</h2>
+        </div>
+        <p>
+          Dari penelusuran publik, nama Kanal Akhmad Baso muncul sebagai sumber informasi terkait
+          isu lokal Palopo dan Tana Luwu. Website ini adalah rancangan portal berita yang mengambil
+          arah tema tersebut, bukan salinan data Facebook, sehingga kontennya disusun sebagai contoh
+          redaksi yang bisa diganti dengan berita asli.
+        </p>
+      </section>
+
+      <section class="layout-section">
+        <div class="section-heading">
+          <p class="eyebrow">Format</p>
+          <h2>Rubrik Redaksi</h2>
+        </div>
+
+        <div class="rubric-grid">
+          <article>
+            <h3>Laporan Lapangan</h3>
+            <p>Berita utama dengan kronologi, lokasi, narasumber, dan pembaruan terbaru.</p>
+          </article>
+          <article>
+            <h3>Suara Warga</h3>
+            <p>Keluhan, masukan, apresiasi, dan cerita warga yang perlu mendapat perhatian.</p>
+          </article>
+          <article>
+            <h3>Memo Budaya</h3>
+            <p>Catatan pendek tentang tokoh, kebiasaan, peristiwa budaya, dan arsip lokal.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer" id="kontak">
+      <div>
+        <strong>Kanal Akhmad Baso</strong>
+        <p>Template portal berita lokal. Konten demo dapat diganti dengan artikel asli.</p>
+      </div>
+      <a href="https://www.facebook.com/akhmad.baso.379965" target="_blank" rel="noreferrer">
+        Kunjungi sumber Facebook
+      </a>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
