@@ -487,8 +487,9 @@ img {
 }
 
 .footer {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(260px, 1.15fr) auto;
+  align-items: start;
   gap: 24px;
   margin-top: 86px;
   padding: 30px 0;
@@ -502,6 +503,19 @@ img {
 
 .footer p {
   margin: 8px 0 0;
+}
+
+.footer address {
+  color: var(--muted);
+  font-style: normal;
+  line-height: 1.6;
+}
+
+.footer address span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--ink);
+  font-weight: 800;
 }
 
 .footer a {
@@ -1262,7 +1276,7 @@ select:focus {
   }
 
   .footer {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
 
   .footer a {
