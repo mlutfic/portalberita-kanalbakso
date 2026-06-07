@@ -1,4 +1,4 @@
-const ASSET_NOTICE = "Maaf, aset ini milik Kanal Bakso.";
+const ASSET_NOTICE = "Maaf asset ini milik Khanal Akhmad Bakso.";
 let assetNoticeTimer;
 
 function ensureAssetNotice() {
